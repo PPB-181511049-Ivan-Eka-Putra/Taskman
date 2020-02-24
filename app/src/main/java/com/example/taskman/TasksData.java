@@ -1,10 +1,17 @@
 package com.example.taskman;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class TasksData {
     private static String[] taskNames = {
             "Mengimplementasikan aplikasi dengan menerapkan konsep Activity",
@@ -12,14 +19,14 @@ public class TasksData {
             "Mengerjakan Front-End fitur log in"
     };
 
-    private static Date[] taskDeadlines;
+    private static LocalDateTime[] taskDeadlines;
 
     static {
         try {
-            taskDeadlines = new Date[]{
-                        getDateFromString("25/02/2020"),
-                        getDateFromString("25/02/2020"),
-                        getDateFromString("24/02/2020")
+            taskDeadlines = new LocalDateTime[]{
+                    getLocalDateTimeFromString("2020-02-25 15:03"),
+                    getLocalDateTimeFromString("25/02/2020"),
+                    getLocalDateTimeFromString("24/02/2020")
                 };
         } catch (ParseException e) {
             e.printStackTrace();
@@ -41,8 +48,10 @@ public class TasksData {
     public TasksData() throws ParseException {
     }
 
-    public static Date getDateFromString(String s) throws ParseException {
-        Date result = new SimpleDateFormat("dd/MM/yyyy").parse(s);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static LocalDateTime getLocalDateTimeFromString(String s) throws ParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime result = LocalDateTime.parse(s, formatter);
         return result;
     }
 
