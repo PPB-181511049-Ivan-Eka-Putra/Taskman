@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Taskman</string>
+    <string name="tasks_name">Task Name</string>
+    <string name="time_remaining">Time Remaining</string>
 </resources>
