@@ -7,10 +7,12 @@ import androidx.annotation.RequiresApi;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Task {
     private String name;
-    private LocalDateTime deadline;
+    private Date deadline;
     private String status;
     private boolean type;
 
@@ -22,11 +24,11 @@ public class Task {
         this.name = name;
     }
 
-    public LocalDateTime getDeadline() {
+    public Date getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
+    public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }
 
@@ -46,35 +48,36 @@ public class Task {
         this.type = type;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public long getHours() {
-        LocalDateTime fromDateTime = this.deadline;
-        LocalDateTime toDateTime = LocalDateTime.now();
-        LocalDateTime tempDateTime = LocalDateTime.from( fromDateTime );
-        long years = tempDateTime.until( toDateTime, ChronoUnit.YEARS );
-        tempDateTime = tempDateTime.plusYears( years );
-        long months = tempDateTime.until( toDateTime, ChronoUnit.MONTHS );
-        tempDateTime = tempDateTime.plusMonths( months );
-        long days = tempDateTime.until( toDateTime, ChronoUnit.DAYS );
-        tempDateTime = tempDateTime.plusDays( days );
-        long hours = tempDateTime.until( toDateTime, ChronoUnit.HOURS );
-        return hours;
-    }
+    public String CalculateTimeRemaining() {
+        String timeRemaining;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public long getMinutes() {
-        LocalDateTime fromDateTime = this.deadline;
-        LocalDateTime toDateTime = LocalDateTime.now();
-        LocalDateTime tempDateTime = LocalDateTime.from( fromDateTime );
-        long years = tempDateTime.until( toDateTime, ChronoUnit.YEARS );
-        tempDateTime = tempDateTime.plusYears( years );
-        long months = tempDateTime.until( toDateTime, ChronoUnit.MONTHS );
-        tempDateTime = tempDateTime.plusMonths( months );
-        long days = tempDateTime.until( toDateTime, ChronoUnit.DAYS );
-        tempDateTime = tempDateTime.plusDays( days );
-        long hours = tempDateTime.until( toDateTime, ChronoUnit.HOURS );
-        tempDateTime = tempDateTime.plusHours( hours );
-        long minutes = tempDateTime.until( toDateTime, ChronoUnit.MINUTES );
-        return minutes;
+        long different = deadline.getTime() - Calendar.getInstance().getTimeInMillis();
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+
+        if (elapsedDays != 0) {
+            timeRemaining = elapsedDays + " days " + elapsedHours + " hours " + elapsedMinutes + " minutes " + elapsedSeconds + " seconds";
+        } else if (elapsedHours != 0) {
+            timeRemaining = elapsedHours + " hours " + elapsedMinutes + " minutes " + elapsedSeconds + " seconds";
+        } else if (elapsedMinutes != 0) {
+            timeRemaining = elapsedMinutes + " minutes " + elapsedSeconds + " seconds";
+        } else {
+            timeRemaining = elapsedSeconds + " seconds";
+        }
+        return timeRemaining;
     }
 }
