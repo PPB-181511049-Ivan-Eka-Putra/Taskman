@@ -27,12 +27,11 @@ public class ListTaskAdapter extends RecyclerView.Adapter<ListTaskAdapter.ListVi
         return new ListViewHolder(view);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
         Task task = listTask.get(position);
         holder.tvName.setText(task.getName());
-        holder.tvTimeRemaining.setText(((int) task.getHours()) + " hr " + ((int) task.getMinutes()) + " min");
+        holder.tvTimeRemaining.setText(task.CalculateTimeRemaining());
     }
 
     @Override
