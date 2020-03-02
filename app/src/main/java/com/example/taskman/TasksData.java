@@ -1,9 +1,5 @@
 package com.example.taskman;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -11,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
-@RequiresApi(api = Build.VERSION_CODES.O)
 public class TasksData {
     private static String[] taskNames = {
             "Mengimplementasikan aplikasi dengan menerapkan konsep Activity",
@@ -19,19 +14,11 @@ public class TasksData {
             "Mengerjakan Front-End fitur log in"
     };
 
-    private static LocalDateTime[] taskDeadlines;
-
-    static {
-        try {
-            taskDeadlines = new LocalDateTime[]{
-                    getLocalDateTimeFromString("2020-02-25 15:03"),
-                    getLocalDateTimeFromString("25/02/2020"),
-                    getLocalDateTimeFromString("24/02/2020")
-                };
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
+    private static Date[] taskDeadlines = {
+                getDateFromString("29/02/2020 15:03:00"),
+                getDateFromString("29/02/2020 16:00:00"),
+                getDateFromString("01/03/2020 15:03:00")
+    };
 
     private static String[] taskStatus = {
             "In Progress",
@@ -45,13 +32,15 @@ public class TasksData {
             true
     };
 
-    public TasksData() throws ParseException {
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static LocalDateTime getLocalDateTimeFromString(String s) throws ParseException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime result = LocalDateTime.parse(s, formatter);
+    public static Date getDateFromString(String s){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
+        Date result = null;
+        
+        try {
+            result = simpleDateFormat.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 
