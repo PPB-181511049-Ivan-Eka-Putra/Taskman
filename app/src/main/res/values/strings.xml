@@ -2,4 +2,7 @@
     <string name="app_name">Taskman</string>
     <string name="tasks_name">Task Name</string>
     <string name="time_remaining">Time Remaining</string>
+    <string name="in_progress">In Progress</string>
+    <string name="completed">Completed</string>
+    <string name="to_do">To Do</string>
 </resources>
