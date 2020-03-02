@@ -1,5 +1,7 @@
 package com.example.taskman;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import static androidx.core.app.ActivityCompat.startActivityForResult;
+
 public class ListTaskAdapter extends RecyclerView.Adapter<ListTaskAdapter.ListViewHolder> {
     private ArrayList<Task> listTask;
+    private Activity activityContext;
 
-    public ListTaskAdapter(ArrayList<Task> list) {
+    public ListTaskAdapter(ArrayList<Task> list, Activity activity) {
         this.listTask = list;
+        this.activityContext = activity;
     }
 
     @NonNull
@@ -29,9 +35,18 @@ public class ListTaskAdapter extends RecyclerView.Adapter<ListTaskAdapter.ListVi
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-        Task task = listTask.get(position);
+        final Task task = listTask.get(position);
         holder.tvName.setText(task.getName());
         holder.tvTimeRemaining.setText(task.CalculateTimeRemaining());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), TaskDetailActivity.class);
+                intent.putExtra(TaskDetailActivity.EXTRA_TASK_NAME, task.getName());
+                intent.putExtra(TaskDetailActivity.EXTRA_TASK_STATUS, task.getStatus());
+                ((Activity) activityContext).startActivityForResult(intent, 1);
+            }
+        });
     }
 
     @Override
