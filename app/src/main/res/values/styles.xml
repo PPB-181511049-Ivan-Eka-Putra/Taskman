@@ -6,6 +6,17 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarStyle">@style/AppTheme.DarkActionBarStyle</item>
+        <item name="android:actionBarStyle">@style/AppTheme.DarkActionBarStyle</item>
+    </style>
+
+    <style name="AppTheme.DarkActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:titleTextStyle">@style/AppTheme.DarkActionBar.TitleTextStyle</item>
+        <item name="titleTextStyle">@style/AppTheme.DarkActionBar.TitleTextStyle</item>
+    </style>
+
+    <style name="AppTheme.DarkActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/colorActionBarTitleText</item>
     </style>
 
 </resources>
