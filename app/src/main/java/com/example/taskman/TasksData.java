@@ -2,12 +2,16 @@ package com.example.taskman;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class TasksData {
+    private static int[] taskIds = {
+            1,
+            2,
+            3
+    };
+
     private static String[] taskNames = {
             "Mengimplementasikan aplikasi dengan menerapkan konsep Activity",
             "Memunculkan data pada RecyclerView",
@@ -35,7 +39,7 @@ public class TasksData {
     public static Date getDateFromString(String s){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
         Date result = null;
-        
+
         try {
             result = simpleDateFormat.parse(s);
         } catch (ParseException e) {
@@ -47,11 +51,7 @@ public class TasksData {
     static ArrayList<Task> getListData() {
         ArrayList<Task> list = new ArrayList<>();
         for (int position = 0; position < taskNames.length; position++) {
-            Task task = new Task();
-            task.setName(taskNames[position]);
-            task.setDeadline(taskDeadlines[position]);
-            task.setStatus(taskStatus[position]);
-            task.setType(taskTypes[position]);
+            Task task = new Task(taskNames[position], taskDeadlines[position]);
             list.add(task);
         }
         return list;
