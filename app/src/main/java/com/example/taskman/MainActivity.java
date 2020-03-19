@@ -1,6 +1,7 @@
 package com.example.taskman;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Task> list = new ArrayList<>();
     private TaskViewModel mTaskViewModel;
 
+    public static final int CREATE_NEW_TASK_ACTIVITY_REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         list.addAll(TasksData.getListData());
         showRecyclerList();
+        mTaskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
     }
 
     private void showRecyclerList() {
