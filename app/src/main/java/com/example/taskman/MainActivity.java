@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private RecyclerView rvTasks;
     private ArrayList<Task> list = new ArrayList<>();
+    private TaskViewModel mTaskViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +32,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showRecyclerList() {
-        rvTasks.setLayoutManager(new LinearLayoutManager(this));
         ListTaskAdapter listTaskAdapter = new ListTaskAdapter(list, this);
         rvTasks.setAdapter(listTaskAdapter);
+        rvTasks.setLayoutManager(new LinearLayoutManager(this));
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, data.getData().toString(), Toast.LENGTH_SHORT).show();
