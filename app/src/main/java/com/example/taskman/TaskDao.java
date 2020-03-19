@@ -1,8 +1,12 @@
 package com.example.taskman;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+
+import java.util.List;
 
 @Dao
 public interface TaskDao {
@@ -11,4 +15,10 @@ public interface TaskDao {
     // conflict resolution strategy
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Task word);
+
+    @Query("DELETE FROM task_table")
+    void deleteAll();
+
+    @Query("SELECT * from task_table ORDER BY name ASC")
+    LiveData<List<Task>> getAlphabetizedTasks();
 }

@@ -1,19 +1,19 @@
 package com.example.taskman;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView rvTasks;
@@ -30,28 +30,36 @@ public class MainActivity extends AppCompatActivity {
         rvTasks = findViewById(R.id.rv_tasks);
         rvTasks.setHasFixedSize(true);
 
-        list.addAll(TasksData.getListData());
-        showRecyclerList();
-        mTaskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-    }
-
-    private void showRecyclerList() {
-        ListTaskAdapter listTaskAdapter = new ListTaskAdapter(list, this);
+        ListTaskAdapter listTaskAdapter = new ListTaskAdapter(this);
         rvTasks.setAdapter(listTaskAdapter);
         rvTasks.setLayoutManager(new LinearLayoutManager(this));
-    }
+        mTaskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+        mTaskViewModel.getAllTasks().observe(this, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(@Nullable final List<Task> tasks) {
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(this, data.getData().toString(), Toast.LENGTH_SHORT).show();
+                // Update the cached copy of the tasks in the adapter.
+                listTaskAdapter.setTasks(tasks);
             }
-        }
+        });
     }
 
     public void createNewTask(View view) {
         Intent intent = new Intent(this, CreateNewTaskActivity.class);
-        this.startActivity(intent);
+        startActivityForResult(intent, CREATE_NEW_TASK_ACTIVITY_REQUEST_CODE);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CREATE_NEW_TASK_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Task task = new Task(data.getStringExtra(CreateNewTaskActivity.EXTRA_TASK_NAME), TasksData.getDateFromString(data.getStringExtra(CreateNewTaskActivity.EXTRA_TASK_DEADLINE)));
+            mTaskViewModel.insert(task);
+        } else {
+            Toast.makeText(
+                    getApplicationContext(),
+                    R.string.empty_not_saved,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 }

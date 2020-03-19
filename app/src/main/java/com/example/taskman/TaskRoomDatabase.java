@@ -6,14 +6,13 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Task.class}, version = 1, exportSchema = false)
+@Database(entities = {Task.class}, version = 2, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class TaskRoomDatabase extends RoomDatabase {
 
@@ -27,7 +26,7 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (TaskRoomDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), TaskRoomDatabase.class, "task_database").addCallback(sRoomDatabaseCallback).build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), TaskRoomDatabase.class, "task_database").fallbackToDestructiveMigration().addCallback(sRoomDatabaseCallback).build();
                 }
             }
         }
@@ -38,6 +37,16 @@ public abstract class TaskRoomDatabase extends RoomDatabase {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
+
+            // If you want to keep data through app restarts,
+            // comment out the following block
+            databaseWriterExecutor.execute(() -> {
+
+                // Populate the database in the background.
+                // If you want to start with more words, just add them.
+                TaskDao dao = INSTANCE.taskDao();
+                dao.deleteAll();
+            });
         }
     };
 }

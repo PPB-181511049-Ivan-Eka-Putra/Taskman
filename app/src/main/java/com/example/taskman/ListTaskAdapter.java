@@ -1,6 +1,7 @@
 package com.example.taskman;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static androidx.core.app.ActivityCompat.startActivityForResult;
 
@@ -21,8 +23,7 @@ public class ListTaskAdapter extends RecyclerView.Adapter<ListTaskAdapter.ListVi
     private ArrayList<Task> listTask;
     private Activity activityContext;
 
-    public ListTaskAdapter(ArrayList<Task> list, Activity activity) {
-        this.listTask = list;
+    public ListTaskAdapter(Activity activity) {
         this.activityContext = activity;
     }
 
@@ -35,23 +36,32 @@ public class ListTaskAdapter extends RecyclerView.Adapter<ListTaskAdapter.ListVi
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-        final Task task = listTask.get(position);
-        holder.tvName.setText(task.getName());
-        holder.tvTimeRemaining.setText(task.CalculateTimeRemaining());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (listTask != null) {
+            final Task task = listTask.get(position);
+            holder.tvName.setText(task.getName());
+            holder.tvTimeRemaining.setText(task.calculateTimeRemaining());
+            holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), TaskDetailActivity.class);
                 intent.putExtra(TaskDetailActivity.EXTRA_TASK_NAME, task.getName());
-                intent.putExtra(TaskDetailActivity.EXTRA_TASK_STATUS, task.getStatus());
-                ((Activity) activityContext).startActivityForResult(intent, 1);
-            }
-        });
+                activityContext.startActivityForResult(intent, 1);
+            });
+        } else {
+            holder.tvName.setText("No Task");
+        }
+    }
+
+    void setTasks(List<Task> tasks) {
+        listTask = (ArrayList<Task>) tasks;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return listTask.size();
+        if (listTask != null) {
+            return listTask.size();
+        } else {
+            return 0;
+        }
     }
 
     public class ListViewHolder extends RecyclerView.ViewHolder {
